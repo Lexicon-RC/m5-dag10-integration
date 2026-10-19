@@ -1,0 +1,147 @@
+/* Tillstånd och komponenter som JavaScript styr. Lägg till egna vid behov. */
+.dold {
+  display: none;
+}
+
+.dagens {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.tom,
+.laddar,
+.fel {
+  padding: var(--space-3);
+  border-radius: var(--radius);
+  grid-column: 1 / -1;
+}
+
+.tom {
+  background-color: var(--color-tint);
+}
+
+.laddar {
+  background-color: #eef3fb;
+  color: #16305c;
+}
+
+.fel {
+  background-color: #fdecea;
+  color: #7a1010;
+  border: 1px solid #e3b4b0;
+}
+
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-2);
+}
+
+.filter button,
+.lagg-i-order {
+  font: inherit;
+  padding: 8px 14px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.filter button[aria-pressed="true"] {
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.lagg-i-order {
+  margin-top: var(--space-1);
+}
+
+.lagg-i-order:hover,
+.filter button:hover {
+  background-color: var(--color-tint);
+}
+
+.filter button[aria-pressed="true"]:hover {
+  background-color: var(--color-primary-dark);
+}
+
+#order {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: var(--space-2);
+}
+
+#order ul {
+  list-style: none;
+  margin: 0 0 var(--space-2);
+  padding: 0;
+}
+
+#order li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: 6px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.order-summa {
+  font-weight: 700;
+}
+
+.falt-fel {
+  color: #a01212;
+  font-size: 0.9rem;
+  margin: 4px 0 0;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: #a01212;
+  border-width: 2px;
+}
+
+.vader {
+  background-color: var(--color-tint);
+  border-radius: var(--radius);
+  padding: var(--space-2) var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.vader .sokrad {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  align-items: center;
+}
+
+.vader input,
+.vader select {
+  font: inherit;
+  padding: 8px;
+  border: 1px solid var(--color-input-border);
+  border-radius: var(--radius-sm);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.rekommenderad {
+  background-color: var(--color-tint);
+  border-left: 6px solid var(--color-primary);
+}
+
+.rekommendation {
+  font-weight: 700;
+  margin-top: var(--space-1);
+}

@@ -1,0 +1,17 @@
+{
+  "latitude": 59.34,
+  "longitude": 18.06,
+  "timezone": "Europe/Stockholm",
+  "current_units": {
+    "temperature_2m": "°C",
+    "wind_speed_10m": "km/h",
+    "weather_code": "wmo code"
+  },
+  "current": {
+    "time": "2026-10-19T12:00",
+    "interval": 900,
+    "temperature_2m": 8.4,
+    "weather_code": 3,
+    "wind_speed_10m": 14.2
+  }
+}
