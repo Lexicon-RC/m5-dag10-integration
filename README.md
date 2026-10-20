@@ -8,7 +8,7 @@ Du bygger en **integrationsfunktion** som kopplar ihop flera delar: användaren 
 
 ## Bakgrund
 
-Hittills har varje övning handlat om en del: ett filter, ett formulär, ett nätanrop. Det svåra i riktiga program är att få delarna att fungera tillsammans. Idag gör du det. Strategin: håll logiken ren och testbar (`rekommendera`), håll gränssnittet för sig (`rek-ui.js`) och låt `main.js` vara limmet. Du får nu använda AI mer fritt, men du ansvarar för varje rad. Planera först, bygg, och granska sedan.
+Hittills har varje övning handlat om en del: ett filter, ett formulär, ett nätanrop. Det svåra i riktiga program är att få delarna att fungera tillsammans. Idag gör du det. Strategin: håll logiken ren och testbar (`rekommendera`), håll gränssnittet för sig (`rek-ui.js`) och låt `main.js` vara limmet. Planera först, bygg, och granska sedan.
 
 ## Så arbetar du (samma som alltid)
 
@@ -16,8 +16,7 @@ Hittills har varje övning handlat om en del: ett filter, ett formulär, ett nä
 2. **Klona din fork:** *Code → HTTPS → kopiera adressen*. I terminalen (Ctrl+ö i VS Code): `git clone <adressen>`. Öppna den nya mappen i VS Code och starta *Live Server*.
 3. **Gör uppgiften.** Spara och kontrollera i webbläsaren och Console (F12) efter varje steg. Gör en commit efter varje avslutat steg: `git add .` och `git commit -m "Beskriv vad du gjorde"`.
 4. **Skicka upp** när du är klar: `git push`.
-5. **Fortsätt i `mitt-projekt`** med dagens projektsteg (längre ned).
-6. **Lämna in i Microsoft Forms.**
+5. **Lämna in i Microsoft Forms.**
 
 Fastnar du: skriv ner exakt var och vad du försökt (och vilket felmeddelande du fick), och ta det först i nästa handledda pass.
 
@@ -31,7 +30,7 @@ Forka repot, kör `git clone`, öppna i VS Code, starta Live Server på `tests.h
 
 ### Steg 2. Skriv en plan i tre steg (innan du kodar)
 
-Skapa `docs/plan-integration.md`. Skriv en plan i tre delar: (1) händelse: vad användaren gör, (2) hämtning: vilka anrop och i vilken ordning, (3) uppdatering: vad som ändras på sidan. Rita gärna ett litet flöde. Planen är det du senare jämför AI:s förslag mot.
+Skapa `docs/plan-integration.md`. Skriv en plan i tre delar: (1) händelse: vad användaren gör, (2) hämtning: vilka anrop och i vilken ordning, (3) uppdatering: vad som ändras på sidan. Rita gärna ett litet flöde. Planen är det du håller din kod mot när du är klar.
 
 ### Steg 3. rekommendera: en ren funktion
 
@@ -53,45 +52,13 @@ Gör TODO 1 till 4 i `main.js`. När du är klar ska det gå att byta stad i lis
 
 Testa i webbläsaren: (1) byt stad flera gånger snabbt (Network: Slow 3G hjälper), (2) Offline i Network och byt stad: du ska få felrutan med *Försök igen*, (3) filtrera på *lunch* medan en rekommendation är aktiv, (4) ladda om. Skriv i `docs/plan-integration.md` vad som fungerade och vad du fick rätta.
 
-### Steg 8. Granska din egen kod (och AI:s)
+### Steg 8. Granska din egen kod
 
-Gå igenom `main.js` rad för rad. Kan du förklara varje rad? Skriv en kommentar på varje rad du är osäker på. Om AI hjälpt dig: logga hur stor del som är din och vilka delar du ändrade (se AI-spåret).
+Gå igenom `main.js` rad för rad. Kan du förklara varje rad? Skriv en kommentar på varje rad du är osäker på och läs just de raderna en gång till.
 
 ### Steg 9. Fördjupning (frivillig): AbortController
 
 `senasteVinner` ignorerar gamla svar men avbryter inte anropet. Läs om `AbortController` och `fetch(url, { signal })` och försök avbryta det gamla anropet på riktigt. Skriv vad som händer med felet (`AbortError`).
-
-## AI-spåret (nivå 3: Styr och ansvara)
-
-**Planera, bygg, granska** (cirka 30 minuter, efter att du gjort din egen lösning)
-
-Fri användning, full loggning. Du granskar varje rad AI föreslår och bär ansvaret för allt du lämnar in. Nu får du fri användning. Skillnaden mellan en bra och en dålig användning är hur väl du granskar.
-
-Regler: egen lösning först, du ska kunna förklara varje rad, och du loggar i `docs/ai-logg.md` i `mitt-projekt` under rubriken *Modul 5*. Reglerna står i `AI-REGLER-MODUL5.md`.
-
-1. Skriv en plan i tre steg för din integrationsfunktion (händelse, hämtning, uppdatering).
-2. Låt AI skapa ett första skelett utifrån din plan.
-3. Gå igenom skelettet rad för rad. Skriv en kommentar på varje rad du inte förstod innan du behåller den.
-4. Skriv om minst en tredjedel med egna ord eller bättre struktur.
-5. Logga hur stor del av koden som är din.
-
-Prompt att utgå från:
-
-```
-Här är min plan för en funktion:
-[planen i tre steg]
-Skriv ett skelett i JavaScript med async/await.
-Lämna TODO-kommentarer där jag ska fylla i
-och förklara vad varje TODO ska göra.
-```
-
-**Kontrollera med:**
-
-- Kör med alla tre tillstånden.
-- Kan du förklara varje rad?
-- Tester och Console, inte magkänsla.
-
-**I ditt projekt:** Bygg en integrationsfunktion i ditt eget case (händelse → hämtning → uppdaterat gränssnitt) och logga din AI-användning.
 
 ## Kontrollista: så vet du att du är klar
 
@@ -103,7 +70,6 @@ och förklara vad varje TODO ska göra.
 - [ ] `docs/plan-integration.md` finns med plan och testnoteringar.
 - [ ] Du kan förklara varje rad i `main.js`.
 - [ ] Du har gjort minst sex commits.
-- [ ] Du har gjort AI-uppgiften och skrivit en post i `docs/ai-logg.md` i `mitt-projekt`.
 
 ## Tips om du fastnar
 
@@ -112,20 +78,7 @@ och förklara vad varje TODO ska göra.
 - `dataset.id` är en sträng, ids är tal. Jämför med `Number(...)`.
 - Vill du se race condition? Sätt Network till Slow 3G och byt stad två gånger snabbt. Provkör utan `senasteVinner` först så ser du felet.
 - Gå i små steg: få `rekommendera` grön först, sedan UI-delarna, sist `main.js`.
-- Misstänker du att AI missat något: byt stad medan något laddar och prova Offline. Det är där AI-kod brukar gå sönder.
-
-## Ditt projekt: Integrera delarna i ditt projekt
-
-Efter övningen jobbar du vidare i `mitt-projekt`, samma repo som i modul 4. Övningen här är träningsbanan, projektet är det som växer. Dagens steg står också i `PROJEKTSTEG-MODUL5.md` (som du kopierar till ditt projekt dag 1), under **Dag 10**.
-
-1. Skriv en plan i tre steg (händelse, hämtning, uppdatering) för en integrationsfunktion i ditt projekt i `docs/plan-integration.md`.
-2. Skriv en ren funktion för den logik som beror på hämtad data (som `rekommendera`), med minst fem tester inklusive gränsfall.
-3. Koppla ihop i din `main.js`: användarens val, hämtning med tre tillstånd, den rena funktionen och uppdatering av sidan.
-4. Hantera svar i fel ordning, till exempel med en egen version av `senasteVinner`.
-5. Gör i en feature-gren och en pull request till din egen main (Git från dag 9).
-6. Commit och push.
-
-**Klart när:** Projektet har en integrationsfunktion som kopplar ihop användarens val, hämtad data och en ren, testad funktion, och hanterar fel och svar i fel ordning.
+- Misstänker du att något missats: byt stad medan något laddar och prova Offline. Det är där integration brukar gå sönder.
 
 ## Inlämning
 
@@ -134,8 +87,7 @@ Efter övningen jobbar du vidare i `mitt-projekt`, samma repo som i modul 4. Öv
 I formuläret fyller du i:
 
 1. Länk till din fork av det här repot.
-2. Länk till ditt `mitt-projekt`.
-3. Reflektion: Varför är `rekommendera` en ren funktion och inte skriven direkt i `main.js`? Vad händer om svaren kommer i fel ordning och hur löser `senasteVinner` det?
+2. Reflektion: Varför är `rekommendera` en ren funktion och inte skriven direkt i `main.js`? Vad händer om svaren kommer i fel ordning och hur löser `senasteVinner` det?
 
 ## Vill du mer? (frivilligt)
 
