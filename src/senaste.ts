@@ -11,6 +11,9 @@
 //   fn kastar ett fel och anropet är det senaste: kasta felet vidare.
 //   fn kastar ett fel och anropet är gammalt:     returnera { gammal: true } (felet spelar ingen roll längre)
 // Tips: en variabel utanför den returnerade funktionen som räknar upp vid varje anrop.
-export function senasteVinner(fn) {
+// Resultatet: antingen "gammal" (ett nyare anrop har startat) eller datan.
+export type SenasteSvar<T> = { gammal: true } | { gammal: false; data: T };
+
+export function senasteVinner<A extends unknown[], T>(fn: (...args: A) => Promise<T>): (...args: A) => Promise<SenasteSvar<T>> {
   // TODO
 }

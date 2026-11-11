@@ -1,21 +1,22 @@
 // Tester för dag 10. Ändra inte den här filen.
-import { test, testAsync, assertEqual, assertTrue, assertThrows, visaResultat } from "./testlib.js";
-const vanta = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-import { rekommendera } from "./rekommendera.js";
-import { senasteVinner } from "./senaste.js";
-import { markeraRekommenderade, visaRekommendation } from "./rek-ui.js";
-import { hittaStad } from "./stader.js";
+import type { Ratt, Rekommendation, Vader } from "./typer";
+import { test, testAsync, assertEqual, assertTrue, assertThrows, visaResultat } from "./testlib";
+const vanta = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { rekommendera } from "./rekommendera";
+import { senasteVinner } from "./senaste";
+import { markeraRekommenderade, visaRekommendation } from "./rek-ui";
+import { hittaStad } from "./stader";
 
-const meny = [
-  { id: 1, namn: "Bulle", kategori: "bakverk", servering: "rumstemp" },
-  { id: 2, namn: "Kaffe", kategori: "dryck", servering: "varm" },
-  { id: 3, namn: "Macka", kategori: "lunch", servering: "rumstemp" },
-  { id: 4, namn: "Latte", kategori: "dryck", servering: "varm" },
-  { id: 5, namn: "Iskaffe", kategori: "dryck", servering: "kall" },
-  { id: 6, namn: "Quiche", kategori: "lunch", servering: "varm" },
-  { id: 7, namn: "Kanelbulle", kategori: "bakverk", servering: "rumstemp" },
+const meny: Ratt[] = [
+  { id: 1, namn: "Bulle", pris: 0, vegetarisk: true, kategori: "bakverk", servering: "rumstemp" },
+  { id: 2, namn: "Kaffe", pris: 0, vegetarisk: true, kategori: "dryck", servering: "varm" },
+  { id: 3, namn: "Macka", pris: 0, vegetarisk: true, kategori: "lunch", servering: "rumstemp" },
+  { id: 4, namn: "Latte", pris: 0, vegetarisk: true, kategori: "dryck", servering: "varm" },
+  { id: 5, namn: "Iskaffe", pris: 0, vegetarisk: true, kategori: "dryck", servering: "kall" },
+  { id: 6, namn: "Quiche", pris: 0, vegetarisk: true, kategori: "lunch", servering: "varm" },
+  { id: 7, namn: "Kanelbulle", pris: 0, vegetarisk: true, kategori: "bakverk", servering: "rumstemp" },
 ];
-const ids = (r) => r.ratter.map((x) => x.id);
+const ids = (r: Rekommendation) => r.ratter.map((x) => x.id);
 
 // ---- rekommendera ----
 test("rekommendera: kallt ger varma drycker", () => {
@@ -55,7 +56,7 @@ test("rekommendera: tom meny ger tom lista, inget fel", () => {
   assertEqual(rekommendera({ temperatur: 5, vindhastighet: 0, kod: 0 }, []).ratter, []);
 });
 test("rekommendera: saknat väder kastar fel", () => {
-  assertThrows(() => rekommendera(null, meny), "Väder saknas");
+  assertThrows(() => rekommendera(null as unknown as Vader, meny), "Väder saknas");
 });
 test("rekommendera: ändrar inte menyn", () => {
   const kopia = JSON.stringify(meny);
@@ -65,18 +66,18 @@ test("rekommendera: ändrar inte menyn", () => {
 
 // ---- senasteVinner ----
 testAsync("senasteVinner: ett ensamt anrop är inte gammalt", async () => {
-  const hamta = senasteVinner(async (x) => x * 2);
+  const hamta = senasteVinner(async (x: number) => x * 2);
   assertEqual(await hamta(4), { gammal: false, data: 8 });
 });
 testAsync("senasteVinner: ett långsamt äldre anrop blir gammalt när ett nyare startats", async () => {
-  const hamta = senasteVinner(async (namn, ms) => { await vanta(ms); return namn; });
+  const hamta = senasteVinner(async (namn: string, ms: number) => { await vanta(ms); return namn; });
   const forsta = hamta("Stockholm", 80);
   const andra = hamta("Kiruna", 10);
   assertEqual(await andra, { gammal: false, data: "Kiruna" });
   assertEqual(await forsta, { gammal: true });
 });
 testAsync("senasteVinner: ordningen i svaren spelar ingen roll, bara vilket anrop som var sist", async () => {
-  const hamta = senasteVinner(async (namn, ms) => { await vanta(ms); return namn; });
+  const hamta = senasteVinner(async (namn: string, ms: number) => { await vanta(ms); return namn; });
   const forsta = hamta("A", 10);
   const andra = hamta("B", 80);
   assertEqual(await forsta, { gammal: true });
@@ -84,10 +85,10 @@ testAsync("senasteVinner: ordningen i svaren spelar ingen roll, bara vilket anro
 });
 testAsync("senasteVinner: fel i det senaste anropet kastas vidare", async () => {
   const hamta = senasteVinner(async () => { throw new Error("nej"); });
-  let fel = null;
-  try { await hamta(); } catch (e) { fel = e; }
+  let fel: Error | null = null;
+  try { await hamta(); } catch (e) { fel = e instanceof Error ? e : new Error(String(e)); }
   assertTrue(fel !== null, "förväntade ett fel");
-  assertEqual(fel.message, "nej");
+  assertEqual(fel?.message, "nej");
 });
 testAsync("senasteVinner: fel i ett gammalt anrop ignoreras", async () => {
   let nr = 0;
@@ -115,14 +116,14 @@ function kort() {
 test("markeraRekommenderade: markerar rätt kort", () => {
   const c = kort();
   markeraRekommenderade(c, [1, 3]);
-  const markerade = [...c.querySelectorAll("article.rekommenderad")].map((a) => a.dataset.id);
+  const markerade = [...c.querySelectorAll<HTMLElement>("article.rekommenderad")].map((a) => a.dataset.id);
   assertEqual(markerade, ["1", "3"]);
 });
 test("markeraRekommenderade: anropas igen och ersätter förra markeringen", () => {
   const c = kort();
   markeraRekommenderade(c, [1, 3]);
   markeraRekommenderade(c, [2]);
-  assertEqual([...c.querySelectorAll("article.rekommenderad")].map((a) => a.dataset.id), ["2"]);
+  assertEqual([...c.querySelectorAll<HTMLElement>("article.rekommenderad")].map((a) => a.dataset.id), ["2"]);
 });
 test("markeraRekommenderade: tom lista tar bort alla markeringar", () => {
   const c = kort();
@@ -135,14 +136,14 @@ test("visaRekommendation: lägger till en rad utan att tömma containern", () =>
   c.innerHTML = "<p>Stockholm: 5 °C</p>";
   visaRekommendation(c, "Något varmt?");
   assertEqual(c.children.length, 2);
-  assertEqual(c.querySelector("p.rekommendation").textContent, "Något varmt?");
+  assertEqual(c.querySelector("p.rekommendation")?.textContent, "Något varmt?");
 });
 test("visaRekommendation: aldrig två rekommendationer", () => {
   const c = document.createElement("div");
   visaRekommendation(c, "Första");
   visaRekommendation(c, "Andra");
   assertEqual(c.querySelectorAll(".rekommendation").length, 1);
-  assertEqual(c.querySelector(".rekommendation").textContent, "Andra");
+  assertEqual(c.querySelector(".rekommendation")?.textContent, "Andra");
 });
 test("visaRekommendation: skriver text, inte HTML", () => {
   const c = document.createElement("div");

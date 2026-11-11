@@ -1,20 +1,28 @@
 // Dag 4–5: FACIT.
-import { formateraPris } from "./pris.js";
-import { hittaRatt, totalPris } from "./meny.js";
+import { formateraPris } from "./pris";
+import type { Ratt, OrderRad } from "./typer";
 
-export function skapaRattKort(ratt) {
+// De tre elementen som visar beställningen.
+export interface OrderRef {
+  lista: HTMLElement;
+  summa: HTMLElement;
+  tom: HTMLElement;
+}
+import { hittaRatt, totalPris } from "./meny";
+
+export function skapaRattKort(ratt: Ratt): HTMLElement {
   const kort = document.createElement("article");
-  kort.dataset.id = ratt.id;
+  kort.dataset.id = String(ratt.id);
 
   const bild = document.createElement("img");
-  bild.src = ratt.bild;
+  bild.src = ratt.bild ?? "";
   bild.alt = `Illustration av ${ratt.namn.toLowerCase()}`;
 
   const rubrik = document.createElement("h3");
   rubrik.textContent = ratt.namn;
 
   const text = document.createElement("p");
-  text.textContent = ratt.beskrivning;
+  text.textContent = ratt.beskrivning ?? "";
 
   const pris = document.createElement("p");
   pris.className = "pris";
@@ -23,7 +31,7 @@ export function skapaRattKort(ratt) {
   const knapp = document.createElement("button");
   knapp.type = "button";
   knapp.className = "lagg-i-order";
-  knapp.dataset.id = ratt.id;
+  knapp.dataset.id = String(ratt.id);
   knapp.textContent = "Lägg i beställning";
   knapp.setAttribute("aria-label", `Lägg ${ratt.namn} i beställningen`);
 
@@ -31,7 +39,7 @@ export function skapaRattKort(ratt) {
   return kort;
 }
 
-export function visaMeny(container, ratter) {
+export function visaMeny(container: HTMLElement, ratter: Ratt[]): void {
   container.replaceChildren();
   if (ratter.length === 0) {
     const tom = document.createElement("p");
@@ -45,19 +53,19 @@ export function visaMeny(container, ratter) {
   }
 }
 
-export function uppdateraRubrik(element, antal) {
+export function uppdateraRubrik(element: HTMLElement, antal: number): void {
   const ord = antal === 1 ? "rätt" : "rätter";
   element.textContent = `Meny (${antal} ${ord})`;
 }
 
-export function markeraDagensRatt(container, id) {
-  for (const kort of container.querySelectorAll("article")) {
+export function markeraDagensRatt(container: HTMLElement, id: number): void {
+  for (const kort of container.querySelectorAll<HTMLElement>("article")) {
     kort.classList.toggle("dagens", kort.dataset.id === String(id));
   }
 }
 
 // ref = { lista, summa, tom } är tre element. order är [{ id, antal }].
-export function visaOrder(ref, order, meny) {
+export function visaOrder(ref: OrderRef, order: OrderRad[], meny: Ratt[]): void {
   ref.lista.replaceChildren();
   ref.tom.classList.toggle("dold", order.length > 0);
   for (const rad of order) {

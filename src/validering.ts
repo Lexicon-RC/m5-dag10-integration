@@ -1,5 +1,5 @@
 // Dag 5: FACIT.
-export function valideraNamn(text) {
+export function valideraNamn(text: string): string {
   const namn = text.trim();
   if (namn === "") {
     return "Fyll i ditt namn.";
@@ -10,7 +10,7 @@ export function valideraNamn(text) {
   return "";
 }
 
-export function valideraEpost(text) {
+export function valideraEpost(text: string): string {
   const epost = text.trim();
   if (epost === "") {
     return "Fyll i din e-postadress.";
@@ -24,7 +24,7 @@ export function valideraEpost(text) {
   return "";
 }
 
-export function valideraTelefon(text) {
+export function valideraTelefon(text: string): string {
   const tel = text.trim();
   if (tel === "") {
     return "";
@@ -39,7 +39,7 @@ export function valideraTelefon(text) {
   return "";
 }
 
-export function valideraDatum(text, idag) {
+export function valideraDatum(text: string, idag: string): string {
   if (text === "") {
     return "Välj ett datum.";
   }
@@ -49,19 +49,19 @@ export function valideraDatum(text, idag) {
   return "";
 }
 
-export function valideraAntal(text) {
+export function valideraAntal(text: string): string {
   if (text === "") {
     return "Välj antal personer.";
   }
   return "";
 }
 
-export function dagensDatum() {
+export function dagensDatum(): string {
   return new Date().toLocaleDateString("sv-SE");
 }
 
-export function valideraFormular(varden, idag) {
-  const fel = {};
+export function valideraFormular(varden: Record<string, string>, idag: string): Record<string, string> {
+  const fel: Record<string, string> = {};
   const kontroller = {
     namn: valideraNamn(varden.namn),
     epost: valideraEpost(varden.epost),

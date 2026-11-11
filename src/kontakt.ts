@@ -1,20 +1,33 @@
 // Dag 5: FACIT.
-import { valideraNamn, valideraEpost, valideraTelefon, valideraDatum, valideraAntal, valideraFormular, dagensDatum } from "./validering.js";
+import { valideraNamn, valideraEpost, valideraTelefon, valideraDatum, valideraAntal, valideraFormular, dagensDatum } from "./validering";
 
-const form = document.querySelector("#bokningsform");
-const bekraftelse = document.querySelector("#bekraftelse");
+import { hamta } from "./dom";
 
-const regler = {
+type Falt = HTMLInputElement | HTMLSelectElement;
+
+const form = hamta<HTMLFormElement>("#bokningsform");
+const bekraftelse = hamta("#bekraftelse");
+
+// elements.namedItem ger Element | RadioNodeList | null. Vi kollar att det är ett fält vi känner igen.
+function hittaFalt(namn: string): Falt {
+  const falt = form.elements.namedItem(namn);
+  if (falt instanceof HTMLInputElement || falt instanceof HTMLSelectElement) {
+    return falt;
+  }
+  throw new Error(`Fältet ${namn} saknas i formuläret`);
+}
+
+const regler: Record<string, (text: string) => string> = {
   namn: valideraNamn,
   epost: valideraEpost,
   telefon: valideraTelefon,
-  datum: (text) => valideraDatum(text, dagensDatum()),
+  datum: (text: string) => valideraDatum(text, dagensDatum()),
   antal: valideraAntal,
 };
 
-function visaFel(falt, meddelande) {
+function visaFel(falt: Falt, meddelande: string): void {
   const felId = `${falt.name}-fel`;
-  let fel = document.getElementById(felId);
+  let fel: HTMLElement | null = document.getElementById(felId);
   if (!fel) {
     fel = document.createElement("p");
     fel.className = "falt-fel";
@@ -32,7 +45,7 @@ function visaFel(falt, meddelande) {
 }
 
 for (const [namn, regel] of Object.entries(regler)) {
-  const falt = form.elements[namn];
+  const falt = hittaFalt(namn);
   falt.addEventListener("blur", () => visaFel(falt, regel(falt.value)));
   falt.addEventListener("input", () => {
     if (falt.getAttribute("aria-invalid") === "true") {
@@ -43,14 +56,19 @@ for (const [namn, regel] of Object.entries(regler)) {
 
 form.addEventListener("submit", (handelse) => {
   handelse.preventDefault();
-  const varden = Object.fromEntries(new FormData(form));
+  const varden: Record<string, string> = {};
+  for (const [nyckel, varde] of new FormData(form)) {
+    if (typeof varde === "string") {
+      varden[nyckel] = varde;
+    }
+  }
   const fel = valideraFormular(varden, dagensDatum());
   const felNamn = Object.keys(fel);
   if (felNamn.length > 0) {
     for (const namn of Object.keys(regler)) {
-      visaFel(form.elements[namn], fel[namn] || "");
+      visaFel(hittaFalt(namn), fel[namn] ?? "");
     }
-    form.elements[felNamn[0]].focus();
+    hittaFalt(felNamn[0]).focus();
     bekraftelse.textContent = "";
     return;
   }

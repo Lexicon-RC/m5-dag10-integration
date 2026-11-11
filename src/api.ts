@@ -1,6 +1,13 @@
 // Dag 8: FACIT.
-export async function hamtaJson(url, fetchFn = fetch) {
-  let svar;
+import type { Ratt, Vader, FetchFn } from "./typer";
+
+// Det vi använder ur väder-API:ets svar. Fler fält finns, men vi beskriver bara det vi läser.
+interface VaderSvar {
+  current?: { temperature_2m: number; weather_code: number; wind_speed_10m: number };
+}
+
+export async function hamtaJson(url: string, fetchFn: FetchFn = fetch): Promise<unknown> {
+  let svar: Awaited<ReturnType<FetchFn>>;
   try {
     svar = await fetchFn(url);
   } catch (fel) {
@@ -12,7 +19,7 @@ export async function hamtaJson(url, fetchFn = fetch) {
   return await svar.json();
 }
 
-export async function hamtaMeny(fetchFn = fetch) {
+export async function hamtaMeny(fetchFn: FetchFn = fetch): Promise<Ratt[]> {
   const data = await hamtaJson("data/meny.json", fetchFn);
   if (!Array.isArray(data)) {
     throw new Error("Menyn hade ett oväntat format");
@@ -20,9 +27,9 @@ export async function hamtaMeny(fetchFn = fetch) {
   return data;
 }
 
-export async function hamtaVader(lat, lon, fetchFn = fetch) {
+export async function hamtaVader(lat: number, lon: number, fetchFn: FetchFn = fetch): Promise<Vader> {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code,wind_speed_10m&timezone=auto`;
-  const data = await hamtaJson(url, fetchFn);
+  const data = (await hamtaJson(url, fetchFn)) as VaderSvar;
   if (!data.current) {
     throw new Error("Oväntat svar från väder-API:et");
   }
@@ -33,7 +40,7 @@ export async function hamtaVader(lat, lon, fetchFn = fetch) {
   };
 }
 
-export function tolkaVaderkod(kod) {
+export function tolkaVaderkod(kod: number): string {
   if (kod === 0) return "klart";
   if (kod >= 1 && kod <= 3) return "mest klart eller molnigt";
   if (kod === 45 || kod === 48) return "dimma";

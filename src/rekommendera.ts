@@ -17,6 +17,8 @@
 //   5. Är det nederbörd (kod >= 51): lägg till ALLA rätter med kategori "lunch" och servering "varm"
 //      sist i ratter, och lägg till " Det är dåligt väder ute, så en varm lunch passar också." sist i rubriken.
 //   Ordningen i ratter ska vara samma som i menyn. Är menyn tom blir ratter en tom lista (inget fel).
-export function rekommendera(vader, meny) {
+import type { Ratt, Vader, Rekommendation } from "./typer";
+
+export function rekommendera(vader: Vader, meny: Ratt[]): Rekommendation {
   // TODO
 }
